@@ -20,7 +20,7 @@ def picard_dict(fa, dict_):
     outputs = [dict_]
     options = {}
     spec = '''
-java -jar ./share/picard-2.22.4-0/picard.jar CreateSequenceDictionary \
+java -jar ./libexec/picard/picard.jar CreateSequenceDictionary \
 R={fa} \
 O={dict_}   
     '''.format(fa=fa, dict_=dict_)
@@ -58,26 +58,31 @@ bwa mem {fa} {fq1} {fq2} | samtools view -Sb > {output}
     return inputs, outputs, options, spec
 
 
-def picard_rg(mapped, rgroup, name):
+def picard_rg(mapped, ref, rgroup, name):
     '''
     Template for adding read groups.
     '''
-    inputs = [mapped, name]
+    inputs = [mapped, ref, name]
     outputs = [rgroup]
     options = {}
     spec = '''
-java -jar ./share/picard-2.22.4-0/picard.jar AddOrReplaceReadGroups \
+java -jar ./libexec/picard/picard.jar AddOrReplaceReadGroups \
 I={mapped} \
 O={rgroup} \
 RGLB=lib1 \
 RGPL=illumina \
 RGPU=unit1 \
-RGSM={name}
-    '''.format(mapped=mapped, rgroup=rgroup, name=name)
+RGSM={name} \
+R={ref} \
+CREATE_INDEX=true \
+MAX_RECORDS_IN_RAM=4000000 \
+USE_JDK_INFLATER=true \
+USE_JDK_DEFLATER=true
+    '''.format(mapped=mapped, ref=ref, rgroup=rgroup, name=name)
     return inputs, outputs, options, spec
 
 
-def picard_md(rgroup, dups, bai, sbi):
+def gatk_md(rgroup, dups, bai, sbi):
     '''
     Template for marking duplicates. This code not only marks duplicates but
     also removes them, I am not sure if this is correct.
@@ -92,9 +97,6 @@ gatk MarkDuplicatesSpark \
 --remove-sequencing-duplicates    
     '''.format(rgroup=rgroup, dups=dups)
     return inputs, outputs, options, spec
-
-
-####### Base (Quality Score) Recalibration #######
 
 
 def gatk_haplotypecaller(fa, fai, dict_, bam, gvcf, idx):
@@ -114,36 +116,46 @@ gatk --java-options '-Xmx4g' HaplotypeCaller \
     return inputs, outputs, options, spec
 
 
-def gatk_combinegvcfs(fa, gvcf0, gvcf1, gvcf2, cohort):
+def gvcf_list(tsv):
     '''
-    Template for combining multiple gvcf files.
-    GenomicsDBImport might be a better solution.
+    Template for creating map file of g.vcf files.
     '''
-    inputs = [fa, gvcf0, gvcf1, gvcf2]
-    outputs = [cohort]
+    inputs = []
+    outputs = [tsv]
     options = {}
     spec = '''
-gatk CombineGVCFs \
--R {fa} \
---variant {gvcf0} \
---variant {gvcf1} \
---variant {gvcf2} \
--O {cohort}
-    '''.format(fa=fa, gvcf0=gvcf0, gvcf1=gvcf1, gvcf2=gvcf2, cohort=cohort)
+python3.7 sample_map.py {tsv}   
+    '''.format(tsv=tsv)
     return inputs, outputs, options, spec
 
 
-def gatk_genotypegvcfs(fa, gvcf, vcf):
+def gatk_genomicsdbimport(samples, db):
+    '''
+    Template for combining g.vcf files.
+    '''
+    inputs = [samples]
+    outputs = [db]
+    options = {}
+    spec = '''
+gatk --java-options '-Xmx4g -Xms4g' GenomicsDBImport \
+--sample-name-map {samples} \
+--genomicsdb-workspace-path {db} \
+-L LjG1.1_chr1 -L LjG1.1_chr2 
+    '''.format(samples=samples, db=db)
+    return inputs, outputs, options, spec
+
+
+def gatk_genotypegvcfs(fa, db, vcf):
     '''
     Template for joint genotyping.
     '''
-    inputs = [fa, gvcf]
+    inputs = [fa, db]
     outputs = [vcf]
     options = {}
     spec = '''
 gatk --java-options '-Xmx4g' GenotypeGVCFs \
 -R {fa} \
--V {gvcf} \
--O {vcf}  
-    '''.format(fa=fa, gvcf=gvcf, vcf=vcf)
+-V gendb://{db} \
+-O {vcf}
+    '''.format(fa=fa, db=db, vcf=vcf)
     return inputs, outputs, options, spec
