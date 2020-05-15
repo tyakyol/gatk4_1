@@ -39,13 +39,14 @@ for i in range(len(files)):
     gwf.target_from_template('picardRG_{}'.format(files[i][0][11:16]),
                              picard_rg(mapped='results/mapped_{}.bam'.format(
                                  files[i][0][11:16]),
+                                       ref='data/refGen.fa',
                                        rgroup='results/rg_{}.bam'.format(
                                            files[i][0][11:16]),
                                        name=files[i][0][11:16]
                              ))
 
-    gwf.target_from_template('picardMD_{}'.format(files[i][0][11:16]),
-                             picard_md(rgroup='results/rg_{}.bam'.format(
+    gwf.target_from_template('gatkMD_{}'.format(files[i][0][11:16]),
+                             gatk_md(rgroup='results/rg_{}.bam'.format(
                                  files[i][0][11:16]),
                                        dups='results/md_{}.bam'.format(
                                            files[i][0][11:16]),
@@ -67,16 +68,16 @@ for i in range(len(files)):
                                                       files[i][0][11:16])
                                                   ))
 
-gwf.target_from_template('gatkCombinegvcfs',
-                         gatk_combinegvcfs(fa=rg,
-                                           gvcf0='results/Gifu_.g.vcf',
-                                           gvcf1='results/MG001.g.vcf',
-                                           gvcf2='results/MG002.g.vcf',
-                                           cohort='results/All_accessions.g.vcf'
-                                           ))
+gwf.target_from_template('gvcfList',
+                         gvcf_list(tsv='results/sample_map.tsv'
+                                   ))
+
+gwf.target_from_template('gatkGenomicsdb',
+                         gatk_genomicsdbimport(samples='results/sample_map.tsv',
+                                               db='results/DB'))
 
 gwf.target_from_template('gatkGenotypegvcfs',
                          gatk_genotypegvcfs(fa=rg,
-                                            gvcf='results/All_accessions.g.vcf',
-                                            vcf='results/All_accessions.vcf'
+                                            db='results/DB',
+                                            vcf='results/Raw_variants.vcf'
                                             ))
