@@ -1,16 +1,18 @@
 name: gatk4
 channels:
+  - biobuilds
+  - anaconda
   - gwforg
   - genomedk
   - conda-forge
   - bioconda
   - defaults
 dependencies:
-  - _r-mutex=1.0.1=anacondar_1
+  - blas=1.0=mkl
   - bwa=0.7.17=h2573ce8_7
   - bzip2=1.0.8=h0b31af3_2
-  - ca-certificates=2020.4.5.1=hecc5488_0
-  - certifi=2020.4.5.1=py37hc8dfbb8_0
+  - ca-certificates=2020.1.1=0
+  - certifi=2020.4.5.1=py37_0
   - click=7.1.2=pyh9f0ad1d_0
   - click-plugins=1.1.1=py_0
   - curl=7.69.1=h2d98d24_0
@@ -18,48 +20,45 @@ dependencies:
   - gatk4=4.1.7.0=py38_0
   - gettext=0.19.8.1=h46ab8bc_1002
   - git=2.26.2=pl526hcc376a2_0
-  - gsl=2.6=ha2d443c_0
   - gwf=1.7.2=py_0
-  - htslib=1.9=h3a161e8_7
-  - icu=64.2=h6de7cb9_1
-  - jpeg=9c=h1de35cc_1001
+  - htslib=1.9=h356306b_9
+  - intel-openmp=2020.1=216
   - krb5=1.17.1=h1752a42_0
-  - libblas=3.8.0=16_openblas
-  - libcblas=3.8.0=16_openblas
   - libcurl=7.69.1=hc0b9707_0
   - libcxx=10.0.0=h1af66ff_2
-  - libdeflate=1.0=h1de35cc_1
+  - libdeflate=1.3=h01d97ff_0
   - libedit=3.1.20170329=hcfe32e1_1001
   - libffi=3.2.1=h4a8c4bd_1007
-  - libgcc=4.8.5=1
-  - libgfortran=4.0.0=2
+  - libgfortran=3.0.1=h93005f0_2
   - libiconv=1.15=h0b31af3_1006
-  - libopenblas=0.3.9=h3d69b6c_0
-  - libpng=1.6.37=hbbe82c9_1
-  - libssh2=1.8.2=hcdc9a53_2
-  - libtiff=4.1.0=h2ae36a8_6
-  - libwebp-base=1.1.0=h0b31af3_3
-  - libxml2=2.9.10=h53d96d6_0
-  - llvm-openmp=10.0.0=h28b9765_0
-  - lz4-c=1.9.2=h4a8c4bd_1
+  - libssh2=1.9.0=h39bdce6_1
+  - mkl=2019.4=233
+  - mkl-service=2.3.0=py37hfbe908c_0
+  - mkl_fft=1.0.15=py37h5e564d8_0
+  - mkl_random=1.1.0=py37ha771720_0
   - ncurses=6.1=h0a44026_1002
+  - numpy=1.18.1=py37h7241aed_0
+  - numpy-base=1.18.1=py37h6575580_1
   - openjdk=8.0.192=h0b31af3_1004
-  - openssl=1.1.1g=h0b31af3_0
+  - openssl=1.1.1g=h1de35cc_0
+  - pandas=1.0.3=py37h6c726b0_0
   - pcre=8.44=h4a8c4bd_0
   - perl=5.26.2=haec8ef5_1006
-  - picard=2.22.4=0
+  - picard=2.15.0=hd30e5a6_0
+  - picard-slim=2.22.5=0
   - pip=20.1=pyh9f0ad1d_0
   - python=3.7.6=h90870a6_5_cpython
+  - python-dateutil=2.8.1=py_0
   - python_abi=3.7=1_cp37m
-  - r-base=3.3.1=0
+  - pytz=2020.1=py_0
   - readline=8.0=hcfe32e1_0
   - samtools=1.9=h8aa4d43_12
-  - setuptools=46.1.3=py37hc8dfbb8_0
+  - setuptools=46.3.1=py37hc8dfbb8_0
+  - six=1.14.0=py37_0
   - sqlite=3.30.1=h93121df_0
   - tk=8.6.10=hbbe82c9_0
   - wheel=0.34.2=py_1
   - xz=5.2.5=h0b31af3_0
   - zlib=1.2.11=h0b31af3_1006
-  - zstd=1.4.4=h4b3e974_3
 prefix: /Users/tyakyol/miniconda3/envs/gatk4
 
