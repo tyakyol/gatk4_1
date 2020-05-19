@@ -116,11 +116,13 @@ gatk --java-options '-Xmx4g' HaplotypeCaller \
     return inputs, outputs, options, spec
 
 
-def gvcf_list(tsv):
+def gvcf_list(gvcf, tsv):
     '''
     Template for creating map file of g.vcf files.
     '''
     inputs = []
+    for g in gvcf:
+        inputs.append(g)
     outputs = [tsv]
     options = {}
     spec = '''
