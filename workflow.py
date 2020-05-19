@@ -9,6 +9,8 @@ rg = 'data/refGen.fa'
 
 gwf = Workflow()
 
+gvcf_files = []
+
 gwf.target_from_template('bwaIndex',
                          bwa_index(fa=rg,
                                    amb=rg+'.amb',
@@ -68,8 +70,11 @@ for i in range(len(files)):
                                                       files[i][0][11:16])
                                                   ))
 
+    gvcf_files.append('results/{}.g.vcf'.format(files[i][0][11:16]))
+
 gwf.target_from_template('gvcfList',
-                         gvcf_list(tsv='results/sample_map.tsv'
+                         gvcf_list(gvcf=gvcf_files,
+                                   tsv='results/sample_map.tsv'
                                    ))
 
 gwf.target_from_template('gatkGenomicsdb',
